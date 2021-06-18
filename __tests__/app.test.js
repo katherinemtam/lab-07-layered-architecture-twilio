@@ -58,7 +58,7 @@ describe('demo routes', () => {
     expect(res.body).toEqual([skincare, toy, plant]);
   });
 
-  test.only('updates an order in our database and sends a text message', async() => {
+  test('updates an order in our database and sends a text message', async() => {
     const order = await Order.insert({
       item: 'game',
       quantity: 1
@@ -71,5 +71,17 @@ describe('demo routes', () => {
       .send(order);
 
     expect(res.body);
+  });
+
+  test('deletes an order in out database and sends a text message', async() => {
+    const order = await Order.insert({
+      item: 'software',
+      quantity: 30
+    });
+
+    return request(app)
+      .delete(`/api/v1/orders/${order.id}`)
+      .send({ order })
+      .then(res => expect(res.body).toEqual(order));
   });
 });
