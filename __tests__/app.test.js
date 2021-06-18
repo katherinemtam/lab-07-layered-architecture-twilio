@@ -2,6 +2,7 @@ import pool from '../lib/utils/pool.js';
 import setup from '../data/setup.js';
 import request from 'supertest';
 import app from '../lib/app.js';
+import Order from '../lib/models/Order.js';
 
 describe('demo routes', () => {
   beforeEach(() => {
@@ -21,5 +22,17 @@ describe('demo routes', () => {
       item: 'food',
       quantity: 100
     });
+  });
+
+  test.only('finds an order in our database', async() => {
+    const order = await Order.insert({
+      item: 'makeup',
+      quantity: 2
+    });
+    
+    const res = await request(app)
+      .get(`/api/v1/orders/${order.id}`);
+
+    expect(res.body).toEqual(order);
   });
 });
