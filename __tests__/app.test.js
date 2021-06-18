@@ -24,7 +24,7 @@ describe('demo routes', () => {
     });
   });
 
-  test.only('finds an order in our database', async() => {
+  test('finds an order in our database', async() => {
     const order = await Order.insert({
       item: 'makeup',
       quantity: 2
@@ -34,5 +34,27 @@ describe('demo routes', () => {
       .get(`/api/v1/orders/${order.id}`);
 
     expect(res.body).toEqual(order);
+  });
+
+  test.only('finds all orders in our database', async() => {
+    const skincare = await  Order.insert({
+      item: 'skincare',
+      quantity: 50
+    });
+
+    const toy = await  Order.insert({
+      item: 'toy',
+      quantity: 5
+    });
+
+    const plant = await  Order.insert({
+      item: 'plant',
+      quantity: 23
+    });
+
+    const res = await request(app)
+      .get('/api/v1/orders');
+
+    expect(res.body).toEqual([skincare, toy, plant]);
   });
 });
