@@ -36,7 +36,7 @@ describe('demo routes', () => {
     expect(res.body).toEqual(order);
   });
 
-  test.only('finds all orders in our database', async() => {
+  test('finds all orders in our database', async() => {
     const skincare = await  Order.insert({
       item: 'skincare',
       quantity: 50
@@ -56,5 +56,20 @@ describe('demo routes', () => {
       .get('/api/v1/orders');
 
     expect(res.body).toEqual([skincare, toy, plant]);
+  });
+
+  test.only('updates an order in our database and sends a text message', async() => {
+    const order = await Order.insert({
+      item: 'game',
+      quantity: 1
+    });
+
+    order.item = 'video game';
+
+    const res = await request(app)
+      .put(`/api/v1/orders/${order.id}`)
+      .send(order);
+
+    expect(res.body);
   });
 });
